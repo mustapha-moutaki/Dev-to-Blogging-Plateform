@@ -3,5 +3,12 @@
         "vlucas/phpdotenv": "^5.6",
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-php80": "*"
+    },
+    "autoload": {
+    "psr-4": {
+       "App\\Models\\": "classes/",
+        "App\\Config\\": "Config/",
+        "App\\admin\\": "admin/"
     }
+}
 }

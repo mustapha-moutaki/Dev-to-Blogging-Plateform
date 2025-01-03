@@ -55,8 +55,8 @@
                 <div id="collapseCategories" class="collapse" aria-labelledby="headingCategories" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Category Management:</h6>
-                        <a class="collapse-item" href="categories.php">View All Categories</a>
-                        <a class="collapse-item" href="add-category.php">Add New Category</a>
+                        <a class="collapse-item" href="http://localhost/devblog_dashboard/views/Categories/list_categories.php">View All Categories</a>
+                        <a class="collapse-item" href="http://localhost/devblog_dashboard/views/Categories/add_category_form.php">Add New Category</a>
                     </div>
                 </div>
             </li>
@@ -71,8 +71,8 @@
                 <div id="collapseTags" class="collapse" aria-labelledby="headingTags" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Tag Management:</h6>
-                        <a class="collapse-item" href="tags.php">View All Tags</a>
-                        <a class="collapse-item" href="add-tag.php">Add New Tag</a>
+                        <a class="collapse-item" href="http://localhost/devblog_dashboard/views/tags/list_tag.php">View All Tags</a>
+                        <a class="collapse-item" href="http://localhost/devblog_dashboard/views/tags/add_tag_form.php">Add New Tag</a>
                     </div>
                 </div>
             </li>

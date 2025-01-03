@@ -1,18 +1,52 @@
 <?php
-require_once dirname(__DIR__) . '/config/database.php';
-require_once dirname(__DIR__) . '/config/functions.php';
-require_once dirname(__DIR__) . '/includes/crud_functions.php';
+// require_once dirname(__DIR__) . '/config/database.php';
+// require_once dirname(__DIR__) . '/includes/crud_functions.php';
 
-$mysqli = connect_db();
-$articles = get_all_articles($mysqli);
-$category_stats = get_category_stats($mysqli);
-$top_users = get_top_users($mysqli);
-$top_articles = get_top_articles($mysqli);
+// require_once '../vendor/autoload.php';//including autoload to use namw
+// use App\Modules\user;//declaration class user from spacename app\modules
+
+
+// $pdo = connect_db(); // Establish the PDO connection
+
+// $articles = get_all_articles($pdo); // Fetch all articles
+// $category_stats = get_category_stats($pdo); // Fetch category stats
+// $top_users = get_top_users($pdo); // Fetch top users
+// $top_articles = get_top_articles($pdo); // Fetch top articles
+
+
+// // Prepare data for the chart
+// $categories = [];
+// $counts = [];
+// // Define colors for the chart
+// $colors = [
+//     'rgb(78, 115, 223)',    // primary
+//     'rgb(28, 200, 138)',    // success
+//     'rgb(54, 185, 204)',    // info
+//     'rgb(246, 194, 62)',    // warning
+//     'rgb(231, 74, 59)',     // danger
+//     'rgb(133, 135, 150)',   // secondary
+//     'rgb(90, 92, 105)',     // dark
+//     'rgb(244, 246, 249)'    // light
+// ];
+
+// foreach ($category_stats as $stat) {
+//     $categories[] = $stat['category_name'];
+//     $counts[] = $stat['article_count'];
+// }
+
+
+
+
+$categories_stats = []; // Initialize the variable to prevent warnings
+
+
+// Debugging: Print the data to confirm structure
+// Uncomment this line to debug
+// print_r($categories_stats);
 
 // Prepare data for the chart
 $categories = [];
 $counts = [];
-// Define colors for the chart
 $colors = [
     'rgb(78, 115, 223)',    // primary
     'rgb(28, 200, 138)',    // success
@@ -24,10 +58,72 @@ $colors = [
     'rgb(244, 246, 249)'    // light
 ];
 
-foreach ($category_stats as $stat) {
+foreach ($categories_stats as $stat) {
     $categories[] = $stat['category_name'];
     $counts[] = $stat['article_count'];
 }
+
+require_once __DIR__ . '/../vendor/autoload.php';
+use App\Config\Database;
+$tagsCount ="";
+$tag = "tags";
+if(database::makeconnection() === null){
+    echo"faild to instapleshed connection";
+}else{
+$tagsCount = Database::getTableCount($tag);
+}
+
+
+$categoryCount ="";
+$category = "categories";
+if(database::makeconnection() === null){
+    echo"faild to instapleshed connection";
+}else{
+$categoryCount = Database::getTableCount($category);
+}
+
+
+
+$userCount ="";
+$user = "users";
+if(database::makeconnection() === null){
+    echo"faild to instapleshed connection";
+}else{
+$userCount = Database::getTableCount($user);
+}
+
+$articleCount ="";
+$article = "articles";
+if(database::makeconnection() === null){
+    echo"faild to instapleshed connection";
+}else{
+$articleCount = Database::getTableCount($article);
+}
+
+
+
+$allArticles = "";
+if(database::makeconnection() === null){
+    echo"faild to instapleshed connection";
+}else{
+$allArticles = Database::get_all_articles();
+}
+
+$topUsers = "";
+if(database::makeconnection() === null){
+    echo"faild to instapleshed connection";
+}else{
+$topUsers = Database::get_top_users();
+}
+
+$categories_stats = "";
+if(database::makeconnection() === null){
+    echo"faild to instapleshed connection";
+}else{
+$categories_stats = Database::get_category_stats();
+}
+// print_r($categories_stats);
+
 
 ?>
 <!DOCTYPE html>
@@ -89,7 +185,7 @@ foreach ($category_stats as $stat) {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Articles</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= getTableCount($mysqli, 'articles') ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $articleCount; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-newspaper fa-2x text-gray-300"></i>
@@ -107,7 +203,7 @@ foreach ($category_stats as $stat) {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Users</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= getTableCount($mysqli, 'users') ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $userCount; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -125,7 +221,7 @@ foreach ($category_stats as $stat) {
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tags
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= getTableCount($mysqli, 'tags') ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $tagsCount; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-tags fa-2x text-gray-300"></i>
@@ -142,7 +238,7 @@ foreach ($category_stats as $stat) {
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Categories</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= getTableCount($mysqli, 'categories') ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $categoryCount; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-folder fa-2x text-gray-300"></i>
@@ -177,39 +273,39 @@ foreach ($category_stats as $stat) {
             </div>
         </div>
         <div class="card-body">
-            <?php foreach($top_users as $index => $user): ?>
+            <?php foreach($topUsers as $author): ?>
                 <div class="d-flex align-items-center mb-3">
                     <div class="mr-3">
                         <div class="icon-circle bg-primary text-white">
-                            <?php if($user['profile_picture_url']): ?>
-                                <img src="<?= htmlspecialchars($user['profile_picture_url']) ?>" 
+                            <?php if($author['profile_picture_url']): ?>
+                                <img src="<?= htmlspecialchars($author['profile_picture_url']) ?>" 
                                      class="rounded-circle" 
                                      style="width: 40px; height: 40px; object-fit: cover;"
-                                     alt="<?= htmlspecialchars($user['username']) ?>">
+                                     alt="<?= htmlspecialchars($author['username']) ?>">
                             <?php else: ?>
                                 <i class="fas fa-user"></i>
                             <?php endif; ?>
                         </div>
                     </div>
                     <div class="flex-grow-1">
-                        <div class="small text-gray-500">Author #<?= $index + 1 ?></div>
-                        <div class="font-weight-bold"><?= htmlspecialchars($user['username']) ?></div>
+                        <div class="small text-gray-500">Author #<!--?= $index + 1 ?--></div>
+                        <div class="font-weight-bold"><?= htmlspecialchars($author['username']) ?></div>
                         <div class="text-gray-800">
-                            <?= number_format($user['article_count']) ?> articles
+                            <?= number_format($author['article_count']) ?> articles
                             <span class="mx-1">•</span>
-                            <?= number_format((int)$user['total_views']) ?> total views
+                            <?= number_format((int)$author['total_views']) ?> total views
                         </div>
                     </div>
                     <div class="ml-2">
-                        <a href="./entities/users/user-profile.php?id=<?= $user['id'] ?>"
+                        <a href="./entities/users/user-profile.php?id=<?= $author['id'] ?>"
                            class="btn btn-primary btn-sm">
                             View Profile
                         </a>
                     </div>
                 </div>
-                <?php if($index < count($top_users) - 1): ?>
+                <!--?php if($index < count($topUsers) - 1): ?-->
                     <hr>
-                <?php endif; ?>
+                <!--?php endif; ?-->
             <?php endforeach; ?>
         </div>
     </div>
@@ -231,7 +327,7 @@ foreach ($category_stats as $stat) {
             </div>
         </div>
         <div class="card-body">
-            <?php foreach($top_articles as $index => $article): ?>
+            <?php foreach($allArticles as $article): ?>
                 <div class="d-flex align-items-center mb-3">
                     <div class="mr-3">
                         <div class="icon-circle bg-success text-white">
@@ -256,9 +352,9 @@ foreach ($category_stats as $stat) {
                         </a>
                     </div>
                 </div>
-                <?php if($index < count($top_articles) - 1): ?>
+                <!--?php if($article < count($allArticles) - 1): ?-->
                     <hr>
-                <?php endif; ?>
+                <!--?php endif; ?-->
             <?php endforeach; ?>
         </div>
     </div>
@@ -266,10 +362,10 @@ foreach ($category_stats as $stat) {
 
 
                         <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
+                        <!-- <div class="col-xl-4 col-lg-5">
                             <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
+                                <!-Card Header - Dropdown -->
+                                <!--div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Category Distribution</h6>
                                     <div class="dropdown no-arrow">
@@ -280,29 +376,75 @@ foreach ($category_stats as $stat) {
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Category Actions:</div>
-                                            <a class="dropdown-item" href="./entities/categories/categories.php">Manage Categories</a>
-                                            <a class="dropdown-item" href="./entities/categories/add-category.php">Add Category</a>
+                                            <a class="dropdown-item" href="devblog_dashboard\views\Categories\list_categories.php">Manage Categories</a>
+                                            <a class="dropdown-item" href="http://localhost/devblog_dashboard/views/categories/list_category.php">Add Category</a>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
+                                </!--div>
+                                <!- Card Body -->
+                                <!--div class="card-body">
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="categoryPieChart"></canvas>
                                     </div>
                                     <div class="mt-4 text-center small">
-                                        <?php foreach ($category_stats as $index => $stat): ?>
+                                        <!?php foreach ($category_stats as $index => $stat): ?>
                                             <span class="mr-2">
-                                                <i class="fas fa-circle" style="color: <?= $colors[$index % count($colors)] ?>"></i>
-                                                <?= htmlspecialchars($stat['category_name']) ?>
-                                                (<?= $stat['article_count'] ?>)
+                                                <i class="fas fa-circle" style="color: <!-?= $colors[$index % count($colors)] ?>"></i>
+                                                <!?= htmlspecialchars($stat['category_name']) ?>
+                                                (<!?= $stat['article_count'] ?>)
                                             </span>
-                                        <?php endforeach; ?>
+                                        <!?php endforeach; ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+
+
+
+
+
+
+
+
+                    <div class="col-xl-4 col-lg-5">
+    <div class="card shadow mb-4">
+        <!-- Card Header -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Category Distribution</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                    <div class="dropdown-header">Category Actions:</div>
+                    <a class="dropdown-item" href="devblog_dashboard\views\Categories\list_categories.php">Manage Categories</a>
+                    <a class="dropdown-item" href="http://localhost/devblog_dashboard/views/categories/list_category.php">Add Category</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+            <div class="chart-pie pt-4 pb-2">
+                <canvas id="categoryPieChart"></canvas>
+            </div>
+            <div class="mt-4 text-center small">
+                <?php if (isset($categories_stats) && is_array($categories_stats)): ?>
+                    <?php foreach ($categories_stats as $index => $stat): ?>
+                        <span class="mr-2">
+                            <i class="fas fa-circle" style="color: <?= $colors[$index % count($colors)] ?>"></i>
+                            <?= htmlspecialchars($stat['category_name']) ?> (<?= $stat['article_count'] ?>)
+                        </span>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-muted">No data available</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
@@ -334,10 +476,9 @@ foreach ($category_stats as $stat) {
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                    <?php foreach($articles as $article): ?>
+                                    <?php foreach($allArticles as $article): ?>
                                         <tr>
-                                            <td>
-                                               
+                                            <td>                                           
                                                 <?= htmlspecialchars($article['title']) ?>
                                             </td>
                                             <td><?= htmlspecialchars($article['author_name']) ?></td>
