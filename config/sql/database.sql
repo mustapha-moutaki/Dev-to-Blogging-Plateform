@@ -13,13 +13,13 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL,
     bio TEXT,
     profile_picture_url VARCHAR(255)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+)
 
 -- Create categories table
 CREATE TABLE categories (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name TEXT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) 
 
 -- Create articles table with proper foreign keys
 CREATE TABLE articles (
@@ -45,13 +45,13 @@ CREATE TABLE articles (
         REFERENCES categories (id),
     CONSTRAINT fk_articles_author FOREIGN KEY (author_id) 
         REFERENCES users (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) 
 
 -- Create tags table
 CREATE TABLE tags (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL UNIQUE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) 
 
 -- Create article_tags table
 CREATE TABLE article_tags (
@@ -62,4 +62,4 @@ CREATE TABLE article_tags (
         REFERENCES articles (id) ON DELETE CASCADE,
     CONSTRAINT fk_article_tags_tag FOREIGN KEY (tag_id) 
         REFERENCES tags (id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+)

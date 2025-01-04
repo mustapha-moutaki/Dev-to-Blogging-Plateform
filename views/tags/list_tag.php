@@ -2,6 +2,40 @@
 require_once __DIR__ . '/../../includes/crud_functions.php';
 require_once '../../vendor/autoload.php';
 use App\config\database;
+use App\Models\Admin;
+
+$pdo = Database::makeconnection();
+
+try {
+    $admin = new Admin($pdo);
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+
+//for deleting
+if (isset($_GET['delete_id'])) {
+    $deleteId = $_GET['delete_id'];
+    if ($admin->deleteTag($deleteId)) {
+    } else {
+        echo "Failed to delete the tag.";
+    }
+}
+
+//for editing
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_tag'])) {
+    $tagName = $_POST['tag_name'];
+    
+    if ($admin->updateTag($editId, $tagName)) {
+        echo "Tag updated successfully!";
+    } else {
+        echo "Failed to update the tag.";
+    }
+}
+
+
+
 
 $getAllTags ="";
 $tag = "tags";
@@ -50,8 +84,13 @@ $getAllTags = Database::getAllTags($tag);
                     </td>
                     <td class="p-3">
                         <span class=" font-semibold  flex justify-around gap-10">
-                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">edit</span>
-                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">delete</span>
+                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">
+                            <a href="update_tag.php?update_tag=<?= $tag['id']; ?>">Edit</a>
+                            </span>
+                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1"><a href="http://localhost/devblog_dashboard/views/tags/list_tag.php?delete_id=<?php echo $tag['id']; ?>" onclick="return confirm('Are you sure you want to delete this tag?')">Delete</a>
+
+                              
+                            </span>
                         </span>
                     </td>
                 </tr>

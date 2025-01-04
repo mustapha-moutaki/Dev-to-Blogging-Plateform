@@ -461,7 +461,7 @@ $categories_stats = Database::get_category_stats();
                                             <th>Tags</th>
                                             <th>Views</th>
                                             <th>Created At</th>
-                                            <th>Actions</th>
+                                            <!-- <th>Actions</th> -->
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -472,7 +472,7 @@ $categories_stats = Database::get_category_stats();
                                             <th>Tags</th>
                                             <th>Views</th>
                                             <th>Created At</th>
-                                            <th>Actions</th>
+                                            <!-- <th>Actions</th> -->
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -499,8 +499,8 @@ $categories_stats = Database::get_category_stats();
                                             <td data-order="<?= strtotime($article['created_at']) ?>">
                                                 <?= date('M d, Y H:i', strtotime($article['created_at'])) ?>
                                             </td>
-                                            <td>
-                                                <div class="btn-group">
+                                            <!-- <td> -->
+                                                <!-- <div class="btn-group">
                                                     <a href="view-article.php?id=<?= $article['id'] ?>" 
                                                     class="btn btn-info btn-sm">
                                                         <i class="fas fa-eye"></i>
@@ -514,8 +514,8 @@ $categories_stats = Database::get_category_stats();
                                                             data-id="<?= $article['id'] ?>">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
-                                                </div>
-                                            </td>
+                                                </div> -->
+                                            <!-- </td> -->
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>

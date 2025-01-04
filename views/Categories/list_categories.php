@@ -3,6 +3,27 @@ require_once __DIR__ . '/../../includes/crud_functions.php';
 require_once '../../vendor/autoload.php';
 use App\config\database;
 
+use App\Models\Admin;
+
+
+$pdo = Database::makeconnection();
+
+try {
+    $admin = new Admin($pdo);
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+
+if (isset($_GET['delete_id'])) {
+    $deleteId = $_GET['delete_id'];
+    if ($admin->deleteCategory($deleteId)) {
+    } else {
+        echo "Failed to delete the tag.";
+    }
+}
+
+
 $getAllCategories ="";
 $category = "categories";
 if(database::makeconnection() === null){
@@ -50,8 +71,12 @@ $getAllCategories = Database::getAllCategories($category);
                     </td>
                     <td class="p-3">
                         <span class=" font-semibold  flex justify-around gap-10">
-                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">edit</span>
-                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">delete</span>
+                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">
+                            <a href="http://localhost/devblog_dashboard/views/categories/update_category.php?update_category=<?php echo $category['id']; ?>">edit</a>
+                            </span>
+                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">
+                            <a href="http://localhost/devblog_dashboard/views/categories/list_categories.php?delete_id=<?php echo $category['id']; ?>" onclick="return confirm('Are you sure you want to delete this category?')">Delete</a>
+                            </span>
                             
                         </span>
                     </td>

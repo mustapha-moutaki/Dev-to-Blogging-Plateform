@@ -18,47 +18,41 @@ if (!$pdo) {
 $getAllCategories = Database::getAllCategories("categories");
 $getAllTags = Database::getAllTags("tags");
 
-// Start the session to retrieve the logged-in user
-session_start();
-$authorId = $_SESSION['user_id'] ?? null; // Ensure that the user is logged in and has a valid session
-if (!$authorId) {
-    die("You must be logged in to add an article.");
-}
 
-// Ensure the submit button is clicked
-if (isset($_POST['add_article'])) {
-    // Retrieve form data
-    $title = $_POST['title'];
-    $slug = $_POST['slug'];
-    $content = $_POST['content'];
-    $excerpt = $_POST['excerpt'];
-    $meta_description = $_POST['meta_description'];
-    $category_id = $_POST['category'];
-    $featured_image = $_FILES['image']['name'] ?? ''; // Handle file upload
-    $status = $_POST['status'] ?? 'draft'; // Default status if not provided
-    $tags = $_POST['tags'] ?? [];
 
-    $author = new Author($pdo);
+    // Ensure the submit button is clicked
+    if (isset($_POST['add_article'])) {
+        // Retrieve form data
+        $title = $_POST['title'];
+        $slug = $_POST['slug'];
+        $content = $_POST['content'];
+        $excerpt = $_POST['excerpt'];
+        $meta_description = $_POST['meta_description'];
+        $category_id = $_POST['category'];
+        $featured_image = $_FILES['image']['name'] ?? ''; // Handle file upload
+        $status = $_POST['status'] ?? 'draft'; // Default status if not provided
+        $tags = $_POST['tags'] ?? [];
 
-    try {
-        $pdo->beginTransaction();
+        $author = new author($pdo);
 
-        // Add the article and get its ID
-        // $article_id = $author->addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status, $authorId);
-        $article_id = $author->addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status);
+        try {
+            $pdo->beginTransaction();
 
-        // Link tags to the article
-        foreach ($tags as $tag_id) {
-            $author->addArticleTag($article_id, $tag_id);
+            // Add the article and get its ID
+            $article_id = $author->addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status);
+
+            // Link tags to the article
+            foreach ($tags as $tag_id) {
+                $author->addArticleTag($article_id, $tag_id);
+            }
+
+            $pdo->commit();
+            echo "Article added successfully!";
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            echo "Error: " . $e->getMessage();
         }
-
-        $pdo->commit();
-        echo "Article added successfully!";
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        echo "Error: " . $e->getMessage();
     }
-}
 
 ?>
 

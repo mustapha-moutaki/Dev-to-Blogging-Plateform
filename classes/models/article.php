@@ -19,7 +19,8 @@ class Article {
             FROM 
                 articles 
             JOIN users ON articles.author_id = users.id 
-            JOIN categories ON articles.category_id = categories.id";
+            JOIN categories ON articles.category_id = categories.id
+            ";
         return $this->db->query($query)->fetch_all(MYSQLI_ASSOC);
     }
 
