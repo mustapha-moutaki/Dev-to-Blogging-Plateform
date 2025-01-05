@@ -4,23 +4,23 @@ require_once '../../vendor/autoload.php';
 
 use App\config\database;
 use App\Models\Admin;
-use App\Models\Author;
 use App\Models\User;
+use App\Models\Author;
 
 // Establish database connection
 $pdo = Database::makeconnection();
-if (!$pdo) {
+if ($pdo) {
     // Handle connection failure (optional)
-    // echo "Connection failed"; // Uncomment for debugging
+    echo "Connection"; // Uncomment for debugging
 }
 
 // Fetch categories and tags for the form
 $getAllCategories = Database::getAllCategories("categories");
 $getAllTags = Database::getAllTags("tags");
 
-// Start the session to retrieve the logged-in user
+
 session_start();
-$authorId = $_SESSION['user_id'] ?? null; // Ensure that the user is logged in and has a valid session
+$authorId = $_SESSION['user_id'] ?? null; 
 if (!$authorId) {
     die("You must be logged in to add an article.");
 }
@@ -42,9 +42,6 @@ if (isset($_POST['add_article'])) {
 
     try {
         $pdo->beginTransaction();
-
-        // Add the article and get its ID
-        // $article_id = $author->addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status, $authorId);
         $article_id = $author->addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status);
 
         // Link tags to the article
@@ -87,6 +84,15 @@ if (isset($_POST['add_article'])) {
             <?php endforeach; ?>
         </select>
 
+
+
+          <!-- author Selection -->
+          <label for="author" class="block mb-2 text-sm font-medium text-black">Select a author</label>
+        <select id="author" name="author" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <?php foreach ($getAllCategories as $author) : ?>
+                <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($author['name']) ?></option>
+            <?php endforeach; ?>
+        </select>
         <!-- Slug Field -->
         <div class="mb-6">
             <label for="slug" class="block text-lg font-medium text-gray-800 mb-1">Slug</label>

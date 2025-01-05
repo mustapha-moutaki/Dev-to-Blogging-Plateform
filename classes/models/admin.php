@@ -82,6 +82,12 @@ class Admin {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getAllAuthors()
+    {
+        $stmt = $this->db->query("SELECT id, name FROM authors");
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }
 
 ?>

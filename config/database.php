@@ -24,14 +24,6 @@ class Database{
     private static $DB_NAME ="devblog_db";
 
     public static function makeconnection(){
-//           try {
-//     $dsn = "mysql:host=" . $_ENV['DB_SERVER'] . ";dbname=" . $_ENV['DB_NAME'] . ";charset=utf8mb4";
-//     $pdo = new PDO($dsn, $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
-//     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-// } catch (PDOException $e) {
-//     die("Connection failed: " . $e->getMessage());
-// }
-
     try {
         $dsn = "mysql:host=" . self::$DB_SERVER . ";dbname=" . self::$DB_NAME . ";charset=utf8mb4";
         self::$con = new PDO($dsn, self::$DB_USERNAME, self::$DB_PASSWORD);

@@ -10,18 +10,30 @@ CREATE TABLE users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(20) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     bio TEXT,
     profile_picture_url VARCHAR(255)
 )
 
+CREATE TABLE authors (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+     name VARCHAR(255),
+     email VARCHAR(255) UNIQUE,
+     password VARCHAR(255),
+     bio VARCHAR(255),
+     image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 -- Create categories table
 CREATE TABLE categories (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name TEXT NOT NULL
 ) 
 
--- Create articles table with proper foreign keys
+-- -- Create articles table with proper foreign keys
 CREATE TABLE articles (
     id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
@@ -44,8 +56,9 @@ CREATE TABLE articles (
     CONSTRAINT fk_articles_category FOREIGN KEY (category_id) 
         REFERENCES categories (id),
     CONSTRAINT fk_articles_author FOREIGN KEY (author_id) 
-        REFERENCES users (id)
-) 
+        REFERENCES authors (id) ON DELETE CASCADE
+);
+
 
 -- Create tags table
 CREATE TABLE tags (
@@ -63,3 +76,5 @@ CREATE TABLE article_tags (
     CONSTRAINT fk_article_tags_tag FOREIGN KEY (tag_id) 
         REFERENCES tags (id) ON DELETE CASCADE
 )
+
+

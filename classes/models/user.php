@@ -1,37 +1,57 @@
 <?php
 namespace App\Models;
+use PDO;
 class User {
     private $pdo;
 
     public function __construct($pdo) {
         $this->pdo = $pdo;
     }
+    public function getPdo() {
+        return $this->pdo;
+    }
 
-    // Method to register a new user
-    public function register($name, $email, $password) {
-        // Validate the input data
-        if (empty($name) || empty($email) || empty($password)) {
+    public function register($username, $email, $password) {
+    
+        if (empty($username) || empty($email) || empty($password)) {
             throw new Exception("All fields are required.");
         }
-
-        // Check if the email is already taken
+    
+    
         $stmt = $this->pdo->prepare("SELECT id FROM users WHERE email = :email");
         $stmt->bindParam(':email', $email);
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
             throw new Exception("Email already exists.");
         }
-
-        // Hash the password before storing it
+    
+    
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Insert the new user into the database
-        $stmt = $this->pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-        $stmt->bindParam(':name', $name);
+    
+        
+        $query = "INSERT INTO users (username, email, password) VALUES (:username, :email, :password)";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $hashedPassword);
-        return $stmt->execute();
+    
+        if ($stmt->execute()) {
+            return true; 
+        } else {
+            throw new Exception("Database insertion failed."); 
+        }
     }
+    
+    
+
+     //  function to find user by email
+     public function findByUsername($username) {
+    $query = "SELECT * FROM users WHERE username = :username LIMIT 1";
+    $stmt = $this->db->prepare($query);
+    $stmt->bindParam(':username', $username);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
     // Method to validate the user login credentials
     public function login($email, $password) {

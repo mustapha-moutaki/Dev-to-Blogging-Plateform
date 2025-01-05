@@ -34,7 +34,14 @@
 //     $counts[] = $stat['article_count'];
 // }
 
+session_start();
 
+if (!isset($_SESSION['username'])) {
+    header('Location: ../../login.php'); 
+    exit;
+}
+
+$username = $_SESSION['username']; 
 
 
 $categories_stats = []; // Initialize the variable to prevent warnings
@@ -65,6 +72,8 @@ foreach ($categories_stats as $stat) {
 
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Config\Database;
+use App\Config\User;
+use App\Config\Tag;
 $tagsCount ="";
 $tag = "tags";
 if(database::makeconnection() === null){
