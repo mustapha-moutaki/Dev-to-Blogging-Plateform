@@ -6,8 +6,8 @@
     },
     "autoload": {
     "psr-4": {
-       "App\\Models\\": "classes/",
-        "App\\Config\\": "Config/"
+       "App\\Models\\": "classes/models",
+        "App\\Config\\": "config/"
     }
 }
 }

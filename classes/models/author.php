@@ -1,10 +1,8 @@
 <?php
 namespace App\Models;
-
-class Author extends user {
+class Author extends User {
     private $pdo;
 
-    // Constructor to initialize PDO connection
     public function __construct($pdo) {
         $this->pdo = $pdo;
     }
@@ -17,6 +15,7 @@ class Author extends user {
         $stmt->bindParam(3, $_SESSION['user_id']);
         return $stmt->execute();
     }
+   
 
     // Method to update an article
     public function updateArticle($articleId, $title, $content) {
@@ -35,7 +34,7 @@ class Author extends user {
         $stmt->bindParam(2, $_SESSION['user_id'], PDO::PARAM_INT);
         return $stmt->execute();
     }
-
+// methidee to add an article
     public function addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status) {
         $sql = "INSERT INTO articles (title, slug, content, excerpt, meta_description, category_id, featured_image, status) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -43,11 +42,13 @@ class Author extends user {
         $stmt->execute([$title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status]);
         return $this->pdo->lastInsertId();
     }
-
+    //methide to add tags to the article
     public function addArticleTag($article_id, $tag_id) {
         $sql = "INSERT INTO article_tag (article_id, tag_id) VALUES (?, ?)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$article_id, $tag_id]);
     }
+
+   
 }
 

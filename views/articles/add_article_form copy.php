@@ -1,60 +1,64 @@
 <?php
+// include '../../admin/components/sidebar.php';
 require_once __DIR__ . '/../../includes/crud_functions.php';
 require_once '../../vendor/autoload.php';
 
 use App\config\database;
 use App\Models\Admin;
-use App\Models\Author;
 use App\Models\User;
+use App\Models\Author;
 
+// require_once __DIR__ . '/../../classes/models/User.php';
+// require_once __DIR__ . '/../../classes/models/Author.php';
 // Establish database connection
 $pdo = Database::makeconnection();
-if (!$pdo) {
-    // Handle connection failure (optional)
-    // echo "Connection failed"; // Uncomment for debugging
-}
+
 
 // Fetch categories and tags for the form
 $getAllCategories = Database::getAllCategories("categories");
 $getAllTags = Database::getAllTags("tags");
 
 
+session_start();
+$authorId = $_SESSION['user_id'] ?? null;
+if (!$authorId) {
+    die("You must be logged in to add an article.");
+}
 
-    // Ensure the submit button is clicked
-    if (isset($_POST['add_article'])) {
-        // Retrieve form data
-        $title = $_POST['title'];
-        $slug = $_POST['slug'];
-        $content = $_POST['content'];
-        $excerpt = $_POST['excerpt'];
-        $meta_description = $_POST['meta_description'];
-        $category_id = $_POST['category'];
-        $featured_image = $_FILES['image']['name'] ?? ''; // Handle file upload
-        $status = $_POST['status'] ?? 'draft'; // Default status if not provided
-        $tags = $_POST['tags'] ?? [];
+if (isset($_POST['add_article'])) {
+    
+    $title = $_POST['title'];
+    $slug = $_POST['slug'];
+    $content = $_POST['content'];
+    $excerpt = $_POST['excerpt'];
+    $meta_description = $_POST['meta_description'];
+    $category_id = $_POST['category'];
+    $featured_image = $_FILES['image']['name'] ?? ''; 
+    $status = $_POST['status'] ?? 'draft'; 
+    $tags = $_POST['tags'] ?? [];
+    $author = new Author($pdo);
+    try {
+        
+        $pdo->beginTransaction();
+        $article_id = $author->addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status);
 
-        $author = new author($pdo);
+        // foreach ($tags as $tag_id) {
+        //     $author->addArticleTag($article_id, $tag_id);
+        // }
 
-        try {
-            $pdo->beginTransaction();
-
-            // Add the article and get its ID
-            $article_id = $author->addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status);
-
-            // Link tags to the article
-            foreach ($tags as $tag_id) {
-                $author->addArticleTag($article_id, $tag_id);
-            }
-
-            $pdo->commit();
-            echo "Article added successfully!";
-        } catch (Exception $e) {
-            $pdo->rollBack();
-            echo "Error: " . $e->getMessage();
-        }
+        $pdo->commit();
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        echo "Error: " . $e->getMessage();
     }
+}
 
 ?>
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,9 +66,18 @@ $getAllTags = Database::getAllTags("tags");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add an Article</title>
+     <!-- Custom fonts for this template-->
+     <link href="../../admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../../admin/css/sb-admin-2.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
+
 <div class="max-w-2xl mx-auto p-4 bg-gray shadow-2xl">
     <form action="" method="POST" enctype="multipart/form-data">
         <!-- Title Field -->
@@ -81,6 +94,15 @@ $getAllTags = Database::getAllTags("tags");
             <?php endforeach; ?>
         </select>
 
+
+
+          <!-- author Selection -->
+          <!-- <label for="author" class="block mb-2 text-sm font-medium text-black">Select a author</label>
+        <select id="author" name="author" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <?php foreach ($getAllCategories as $author) : ?>
+                <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($author['name']) ?></option>
+            <?php endforeach; ?>
+        </select> -->
         <!-- Slug Field -->
         <div class="mb-6">
             <label for="slug" class="block text-lg font-medium text-gray-800 mb-1">Slug</label>
@@ -133,6 +155,5 @@ $getAllTags = Database::getAllTags("tags");
         </div>
     </form>
 </div>
-
 </body>
 </html>

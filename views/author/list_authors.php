@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../includes/crud_functions.php';
 require_once '../../vendor/autoload.php';
 use App\Config\Database;
 use App\Models\Admin;
+use App\Models\Author;
 
 $pdo = Database::makeconnection();
 
@@ -48,12 +49,10 @@ $getAllTags = Database::getAllTags($tag);
 
 
 
-
-
-
 try {
     $authorModel = new Author($pdo);
     $getAllAUTHORS = $authorModel->getAllAuthors();
+    echo"i am inside getall authors method";
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
     exit;

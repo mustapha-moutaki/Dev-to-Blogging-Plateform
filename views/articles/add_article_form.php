@@ -1,4 +1,5 @@
 <?php
+// include '../../admin/components/sidebar.php';
 require_once __DIR__ . '/../../includes/crud_functions.php';
 require_once '../../vendor/autoload.php';
 
@@ -7,12 +8,11 @@ use App\Models\Admin;
 use App\Models\User;
 use App\Models\Author;
 
+// require_once __DIR__ . '/../../classes/models/User.php';
+// require_once __DIR__ . '/../../classes/models/Author.php';
 // Establish database connection
 $pdo = Database::makeconnection();
-if ($pdo) {
-    // Handle connection failure (optional)
-    echo "Connection"; // Uncomment for debugging
-}
+
 
 // Fetch categories and tags for the form
 $getAllCategories = Database::getAllCategories("categories");
@@ -20,37 +20,34 @@ $getAllTags = Database::getAllTags("tags");
 
 
 session_start();
-$authorId = $_SESSION['user_id'] ?? null; 
+$authorId = $_SESSION['user_id'] ?? null;
 if (!$authorId) {
     die("You must be logged in to add an article.");
 }
 
-// Ensure the submit button is clicked
 if (isset($_POST['add_article'])) {
-    // Retrieve form data
+    
     $title = $_POST['title'];
     $slug = $_POST['slug'];
     $content = $_POST['content'];
     $excerpt = $_POST['excerpt'];
     $meta_description = $_POST['meta_description'];
     $category_id = $_POST['category'];
-    $featured_image = $_FILES['image']['name'] ?? ''; // Handle file upload
-    $status = $_POST['status'] ?? 'draft'; // Default status if not provided
+    $featured_image = $_FILES['image']['name'] ?? ''; 
+    $status = $_POST['status'] ?? 'draft'; 
     $tags = $_POST['tags'] ?? [];
-
     $author = new Author($pdo);
-
     try {
+        
         $pdo->beginTransaction();
         $article_id = $author->addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status);
 
-        // Link tags to the article
-        foreach ($tags as $tag_id) {
-            $author->addArticleTag($article_id, $tag_id);
-        }
+        // foreach ($tags as $tag_id) {
+        //     $author->addArticleTag($article_id, $tag_id);
+        // }
 
         $pdo->commit();
-        echo "Article added successfully!";
+        echo "";
     } catch (Exception $e) {
         $pdo->rollBack();
         echo "Error: " . $e->getMessage();
@@ -65,9 +62,20 @@ if (isset($_POST['add_article'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add an Article</title>
+     <!-- Custom fonts for this template-->
+     <link href="../../admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../../admin/css/sb-admin-2.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="flex">
+
+
+<?php include '../../admin/components/sidebar.php'; ?>
 <div class="max-w-2xl mx-auto p-4 bg-gray shadow-2xl">
     <form action="" method="POST" enctype="multipart/form-data">
         <!-- Title Field -->
@@ -87,12 +95,12 @@ if (isset($_POST['add_article'])) {
 
 
           <!-- author Selection -->
-          <label for="author" class="block mb-2 text-sm font-medium text-black">Select a author</label>
+          <!-- <label for="author" class="block mb-2 text-sm font-medium text-black">Select a author</label>
         <select id="author" name="author" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             <?php foreach ($getAllCategories as $author) : ?>
                 <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($author['name']) ?></option>
             <?php endforeach; ?>
-        </select>
+        </select> -->
         <!-- Slug Field -->
         <div class="mb-6">
             <label for="slug" class="block text-lg font-medium text-gray-800 mb-1">Slug</label>
@@ -145,6 +153,29 @@ if (isset($_POST['add_article'])) {
         </div>
     </form>
 </div>
+ <!-- Bootstrap core JavaScript-->
+ <script src="../../admin/vendor/jquery/jquery.min.js"></script>
+    <script src="../../admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Core plugin JavaScript-->
+    <script src="../../admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../../admin/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="../../admin/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../../admin/js/demo/chart-area-demo.js"></script>
+    <script src="../../admin/js/demo/chart-pie-demo.js"></script>
+        
+
+    <!-- Page level plugins -->
+    <script src="../../admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../../admin/js/demo/datatables-demo.js"></script>
 </body>
 </html>

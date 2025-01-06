@@ -39,10 +39,18 @@ $getAllCategories = Database::getAllCategories($category);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>add_category_form</title>
+      <!-- Custom fonts for this template-->
+      <link href="../../admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../../admin/css/sb-admin-2.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
+<body class ="flex">
+<?php include '../../admin/components/sidebar.php'; ?>
 <div class="container p-2 mx-auto sm:p-4 text-black bg-white">
     <h2 class="mb-4 text-2xl font-semibold leading-tight"><tt>MANAGE ALL CATEGORIES()<tt></h2>
     <!-- ?= getTableCount($pdo, 'categories') ?> -->
@@ -71,10 +79,10 @@ $getAllCategories = Database::getAllCategories($category);
                     </td>
                     <td class="p-3">
                         <span class=" font-semibold  flex justify-around gap-10">
-                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">
+                            <span class="rounded-md bg-blue-500 text-white px-10 py-1">
                             <a href="http://localhost/devblog_dashboard/views/categories/update_category.php?update_category=<?php echo $category['id']; ?>">edit</a>
                             </span>
-                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">
+                            <span class="rounded-md bg-blue-500 text-white px-10 py-1">
                             <a href="http://localhost/devblog_dashboard/views/categories/list_categories.php?delete_id=<?php echo $category['id']; ?>" onclick="return confirm('Are you sure you want to delete this category?')">Delete</a>
                             </span>
                             
@@ -87,5 +95,29 @@ $getAllCategories = Database::getAllCategories($category);
         </table>
     </div>
 </div>
+<!-- Bootstrap core JavaScript-->
+<script src="../../admin/vendor/jquery/jquery.min.js"></script>
+    <script src="../../admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="../../admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../../admin/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="../../admin/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../../admin/js/demo/chart-area-demo.js"></script>
+    <script src="../../admin/js/demo/chart-pie-demo.js"></script>
+        
+
+    <!-- Page level plugins -->
+    <script src="../../admin/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../../admin/js/demo/datatables-demo.js"></script>
 </body>
 </html>

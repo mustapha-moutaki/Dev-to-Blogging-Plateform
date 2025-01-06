@@ -55,8 +55,8 @@ CREATE TABLE articles (
     KEY idx_articles_status_date (status, scheduled_date),
     CONSTRAINT fk_articles_category FOREIGN KEY (category_id) 
         REFERENCES categories (id),
-    CONSTRAINT fk_articles_author FOREIGN KEY (author_id) 
-        REFERENCES authors (id) ON DELETE CASCADE
+    -- CONSTRAINT fk_articles_author FOREIGN KEY (author_id) 
+    --     REFERENCES authors (id) ON DELETE CASCADE
 );
 
 
@@ -67,14 +67,21 @@ CREATE TABLE tags (
 ) 
 
 -- Create article_tags table
-CREATE TABLE article_tags (
-    article_id BIGINT UNSIGNED,
-    tag_id BIGINT,
-    PRIMARY KEY (article_id, tag_id),
-    CONSTRAINT fk_article_tags_article FOREIGN KEY (article_id) 
-        REFERENCES articles (id) ON DELETE CASCADE,
-    CONSTRAINT fk_article_tags_tag FOREIGN KEY (tag_id) 
-        REFERENCES tags (id) ON DELETE CASCADE
-)
+-- CREATE TABLE article_tags (
+--     article_id BIGINT UNSIGNED,
+--     tag_id BIGINT,
+--     PRIMARY KEY (article_id, tag_id),
+--     CONSTRAINT fk_article_tags_article FOREIGN KEY (article_id) 
+--         REFERENCES articles (id) ON DELETE CASCADE,
+--     CONSTRAINT fk_article_tags_tag FOREIGN KEY (tag_id) 
+--         REFERENCES tags (id) ON DELETE CASCADE
+-- )
+
+CREATE TABLE article_tag (
+    article_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id)
+);
 
 

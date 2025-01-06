@@ -53,10 +53,18 @@ $getAllTags = Database::getAllTags($tag);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>add_tags_form</title>
+     <!-- Custom fonts for this template-->
+     <link href="../../admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../../admin/css/sb-admin-2.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
+<body class="flex">
+<?php include '../../admin/components/sidebar.php'; ?>
 <div class="container p-2 mx-auto sm:p-4 text-black bg-white">
     <h2 class="mb-4 text-2xl font-semibold leading-tight"><tt>MANAGE ALL TAGS<tt></h2>
     <div class="overflow-x-auto">
@@ -84,10 +92,10 @@ $getAllTags = Database::getAllTags($tag);
                     </td>
                     <td class="p-3">
                         <span class=" font-semibold  flex justify-around gap-10">
-                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1">
+                            <span class="rounded-md bg-blue-500 text-white px-10 py-1">
                             <a href="update_tag.php?update_tag=<?= $tag['id']; ?>">Edit</a>
                             </span>
-                            <span class="rounded-md bg-violet-400 text-gray-900 px-10 py-1"><a href="http://localhost/devblog_dashboard/views/tags/list_tag.php?delete_id=<?php echo $tag['id']; ?>" onclick="return confirm('Are you sure you want to delete this tag?')">Delete</a>
+                            <span class="rounded-md bg-blue-500 text-white px-10 py-1"><a href="http://localhost/devblog_dashboard/views/tags/list_tag.php?delete_id=<?php echo $tag['id']; ?>" onclick="return confirm('Are you sure you want to delete this tag?')">Delete</a>
 
                               
                             </span>
