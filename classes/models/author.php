@@ -1,7 +1,9 @@
 <?php
 namespace App\Models;
+use App\Model;
+use PDO;
 class Author extends User {
-    private $pdo;
+
 
     public function __construct($pdo) {
         $this->pdo = $pdo;
@@ -49,6 +51,20 @@ class Author extends User {
         $stmt->execute([$article_id, $tag_id]);
     }
 
+
+
+    public function getTop3AuthorsByViews($limit = 3) {
+        $sql = "SELECT authors.author_id, authors.name, COUNT(articles.id) AS article_count
+                FROM authors
+                LEFT JOIN articles ON authors.author_id = articles.author_id
+                GROUP BY authors.author_id
+                ORDER BY article_count DESC
+                LIMIT :limit";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT); 
+        $stmt->execute(); 
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    }
    
 }
 

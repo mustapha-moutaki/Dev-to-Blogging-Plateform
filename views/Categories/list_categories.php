@@ -1,36 +1,33 @@
 <?php
-require_once __DIR__ . '/../../includes/crud_functions.php';
-require_once '../../vendor/autoload.php';
-use App\config\database;
+require_once __DIR__ . '/../../includes/crud_functions.php';  // Import necessary files
+require_once '../../vendor/autoload.php';  // Autoload necessary classes
+use App\Config\Database;  // Use the correct namespace for Database
+use App\Models\Category;  // Import the Category model
 
-use App\Models\Admin;
-
-
-$pdo = Database::makeconnection();
-
+// Get the connection instance
+$pdo = Database::makeConnection();  // Ensure the connection is successful
 try {
-    $admin = new Admin($pdo);
+    // Create an instance of Category model
+    $categoryModel = new Category($pdo);
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
 }
 
+// Fetch all categories
+$getAllCategories = $categoryModel->getAllCategories();
 
+// If there's a delete request, process it
+// If there's a delete request, process it
 if (isset($_GET['delete_id'])) {
     $deleteId = $_GET['delete_id'];
-    if ($admin->deleteCategory($deleteId)) {
+    if ($categoryModel->deleteCategory($deleteId)) {
+        header('Location: http://localhost/devblog_dashboard/admin/index.php');
+        exit();
     } else {
-        echo "Failed to delete the tag.";
+        echo "Failed to delete the category.";
     }
 }
 
-
-$getAllCategories ="";
-$category = "categories";
-if(database::makeconnection() === null){
-    echo"faild to instapleshed connection";
-}else{
-$getAllCategories = Database::getAllCategories($category);
-}
 ?>
 
 <!DOCTYPE html>

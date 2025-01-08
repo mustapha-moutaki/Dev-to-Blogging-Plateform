@@ -1,44 +1,32 @@
 <?php
-require_once __DIR__ . '/../../includes/crud_functions.php';
-// require_once __DIR__ . '/../../classes/models/tag.php';
-require_once '../../vendor/autoload.php';
-// require_once __DIR__ . '/../../controllers/tagController.php';
-// require_once __DIR__ . '/../../config/Database.php';
-use App\config\database;
-// include '/../../config/database.php'; 
 
-use App\Modules\category;
-// use App\Config\Database;
+require_once __DIR__ . '/../../includes/crud_functions.php';  // Import necessary files
+require_once '../../vendor/autoload.php';  // Autoload necessary classes
+use App\Config\Database;
+use App\Models\Category;  // Import the Category model
 
-// $database = new Database();
-// $db = $database->connect();
+// إنشاء اتصال PDO
+$pdo = Database::makeconnection();
 
-
-
-// $tagModel = new Tag($db);
-$databse = database::makeconnection();
+// إنشاء كائن من الفئة Category
+$category = new Category($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addcategory'])) {
-  $categoryName = htmlspecialchars(trim($_POST['category']));
-  if (!empty($categoryName)) {
-     
-     if(database::makeconnection() === null){
-      echo"faild connection!";
-     }else {
-      $table = "categories";
-      $column = "name";
-      database::addcategory($table,$column,$categoryName);
-      header('Location:http://localhost/devblog_dashboard/admin/index.php');
-        exit();
-     }
-  //     if ($tagModel->createTag($tagName)) {
-  //         $message = "Tag added successfully!";
-  //     } else {
-  //         $message = "Failed to add the tag.";
-  //     }
-  }
+    $categoryName = htmlspecialchars(trim($_POST['category'])); // تنظيف وإعداد البيانات
 
+    // التحقق من أن اسم التصنيف غير فارغ
+    if (!empty($categoryName)) {
+        // استدعاء الدالة createCategory باستخدام الكائن $category
+        $category->createCategory($categoryName);
+
+        // إعادة التوجيه بعد الإدخال الناجح
+        header('Location: http://localhost/devblog_dashboard/admin/index.php');
+        exit();
+    } else {
+        echo "Category name cannot be empty!";
+    }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

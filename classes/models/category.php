@@ -1,20 +1,63 @@
 <?php
-namespace App\Modules;
-class Category {
-    private $db;
+namespace App\Models;
+use App\Models\Model;
+use App\Config\Database;
+use PDO;
+    class Category extends Model {
+        protected $table = 'Categories';
+        protected $pdo; 
 
-    public function __construct($db) {
-        $this->db = $db;
+        public function __construct($pdo) {
+            $this->pdo = $pdo;
+        }
+
+        public function createCategory($name) {
+            return $this->create($this->table, ['name' => $name]);
+        }
+    
+        public function getAllCategories() {
+            return $this->select($this->table);
+        }
+    
+        public function updateCategory($id, $name) {
+            return $this->update($this->table, ['name' => $name], 'id', $id);
+        }
+    
+        public function deleteCategory($categoryId) {
+            $sql = "DELETE FROM categories WHERE id = :id";
+            $stmt = $this->pdo->prepare($sql); // Ensure $this->pdo is set
+            return $stmt->execute(['id' => $categoryId]);
+        }
+
+        public function countCategories() {
+            return $this->count('categories');
+        }
+
+        public static function get_category_stats() {
+            // استعلام لجلب إحصائيات الفئات (اسم الفئة وعدد المقالات)
+            $sql = "SELECT categories.name AS category_name, COUNT(articles.id) AS article_count
+                    FROM categories
+                    LEFT JOIN articles ON categories.id = articles.category_id
+                    GROUP BY categories.name";
+            
+            // تحضير وتنفيذ الاستعلام
+            $stmt = Database::makeconnection()->prepare($sql);
+            $stmt->execute();
+    
+            // إرجاع النتائج كـ array
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function getCategoryById($id) {
+            $query = "SELECT * FROM {$this->table} WHERE id = :id";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
     }
 
-    public function getAllCategories() {
-        $query = "SELECT id, name FROM categories";
-        return $this->db->query($query)->fetch_all(MYSQLI_ASSOC);
-    }
+?>
 
-    public function createCategory($name) {
-        $stmt = $this->db->prepare("INSERT INTO categories (name) VALUES (?)");
-        $stmt->bind_param("s", $name);
-        return $stmt->execute();
-    }
-}
+

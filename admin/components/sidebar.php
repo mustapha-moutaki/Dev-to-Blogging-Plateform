@@ -1,3 +1,20 @@
+<?php
+// require_once '../vendor/autoload.php';
+
+use App\Config\Database;
+use App\Models\User;
+
+// Check if the user is logged in
+if (isset($_SESSION['user_id'])) {
+    $db = Database::makeConnection(); 
+    $userModel = new User($db);
+
+    $userId = $_SESSION['user_id'];  
+
+    $user = $userModel->getUserById($userId);
+}
+?>
+
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -46,6 +63,7 @@
             </li>
 
             <!-- Nav Item - Categories -->
+<?php if($user['role']==='admin'): ?>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategories"
                     aria-expanded="true" aria-controls="collapseCategories">
@@ -60,8 +78,9 @@
                     </div>
                 </div>
             </li>
-
+            <?php endif; ?>
             <!-- Nav Item - Tags -->
+            <?php if($user['role']==='admin'): ?>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTags"
                     aria-expanded="true" aria-controls="collapseTags">
@@ -76,28 +95,28 @@
                     </div>
                 </div>
             </li>
-
+            <?php endif; ?>
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
+            <?php if($user['role']==='admin'): ?>
             <div class="sidebar-heading">
                 User Management
             </div>
-
+            <?php endif; ?>
             <!-- Nav Item - Authors -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAuthors"
                     aria-expanded="true" aria-controls="collapseAuthors">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Authors</span>
+                    <span>Users</span>
                 </a>
                 <div id="collapseAuthors" class="collapse" aria-labelledby="headingAuthors" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Author Management:</h6>
-                        <a class="collapse-item" href="authors.php">View All Authors</a>
-                        <a class="collapse-item" href="add-author.php">Add New Author</a>
-                        <a class="collapse-item" href="author-roles.php">Manage Roles</a>
+                        <h6 class="collapse-header">User Management:</h6>
+                        <a class="collapse-item" href="http://localhost/devblog_dashboard/views/users/users.php">manage All Users</a>
+                        
                     </div>
                 </div>
             </li>

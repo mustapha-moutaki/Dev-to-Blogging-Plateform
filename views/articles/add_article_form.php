@@ -1,23 +1,21 @@
 <?php
-// include '../../admin/components/sidebar.php';
 require_once __DIR__ . '/../../includes/crud_functions.php';
 require_once '../../vendor/autoload.php';
-
-use App\config\database;
+use App\Config\Database;
 use App\Models\Admin;
 use App\Models\User;
 use App\Models\Author;
-
-// require_once __DIR__ . '/../../classes/models/User.php';
-// require_once __DIR__ . '/../../classes/models/Author.php';
-// Establish database connection
+use App\Models\Category;
+use App\Models\Tag;
 $pdo = Database::makeconnection();
 
 
-// Fetch categories and tags for the form
-$getAllCategories = Database::getAllCategories("categories");
-$getAllTags = Database::getAllTags("tags");
+$categoryModel = new Category($pdo);
+$categories = $categoryModel->getAllCategories();
 
+
+$tagModel = new Tag();
+$tags = $tagModel->getAllTags();
 
 session_start();
 $authorId = $_SESSION['user_id'] ?? null;
@@ -42,12 +40,11 @@ if (isset($_POST['add_article'])) {
         $pdo->beginTransaction();
         $article_id = $author->addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status);
 
-        // foreach ($tags as $tag_id) {
-        //     $author->addArticleTag($article_id, $tag_id);
-        // }
+        
 
         $pdo->commit();
-        echo "";
+header("Location: http://localhost/devblog_dashboard/admin/index.php");
+        exit;
     } catch (Exception $e) {
         $pdo->rollBack();
         echo "Error: " . $e->getMessage();
@@ -74,7 +71,6 @@ if (isset($_POST['add_article'])) {
 </head>
 <body class="flex">
 
-
 <?php include '../../admin/components/sidebar.php'; ?>
 <div class="max-w-2xl mx-auto p-4 bg-gray shadow-2xl">
     <form action="" method="POST" enctype="multipart/form-data">
@@ -87,20 +83,13 @@ if (isset($_POST['add_article'])) {
         <!-- Category Selection -->
         <label for="category" class="block mb-2 text-sm font-medium text-black">Select a category</label>
         <select id="category" name="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-            <?php foreach ($getAllCategories as $category) : ?>
+            <?php foreach ($categories as $category) : ?>
                 <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></option>
             <?php endforeach; ?>
         </select>
 
 
 
-          <!-- author Selection -->
-          <!-- <label for="author" class="block mb-2 text-sm font-medium text-black">Select a author</label>
-        <select id="author" name="author" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-            <?php foreach ($getAllCategories as $author) : ?>
-                <option value="<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($author['name']) ?></option>
-            <?php endforeach; ?>
-        </select> -->
         <!-- Slug Field -->
         <div class="mb-6">
             <label for="slug" class="block text-lg font-medium text-gray-800 mb-1">Slug</label>
@@ -134,7 +123,7 @@ if (isset($_POST['add_article'])) {
         <!-- Tags Selection -->
         <div class="flex wrap gap-2 mb-10">
             <div class="flex flex-wrap w-30 justify-between">
-                <?php foreach ($getAllTags as $tag): ?>
+                <?php foreach ($tags as $tag): ?>
                     <div class="mr-40">
                         <label class="inline-flex items-center">
                             <input type="checkbox" class="w-4 h-4 accent-red-600" name="tags[]" value="<?= htmlspecialchars($tag['id']) ?>">
@@ -153,6 +142,7 @@ if (isset($_POST['add_article'])) {
         </div>
     </form>
 </div>
+
  <!-- Bootstrap core JavaScript-->
  <script src="../../admin/vendor/jquery/jquery.min.js"></script>
     <script src="../../admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -177,5 +167,6 @@ if (isset($_POST['add_article'])) {
 
     <!-- Page level custom scripts -->
     <script src="../../admin/js/demo/datatables-demo.js"></script>
+
 </body>
 </html>

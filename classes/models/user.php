@@ -1,8 +1,10 @@
 <?php
 namespace App\Models;
+use App\Models\Model;
 use PDO;
-class User {
+class User extends Model{
     private $pdo;
+    private $table = 'users';
 
     public function __construct($pdo) {
         $this->pdo = $pdo;
@@ -43,8 +45,6 @@ class User {
     }
     
     
-
-     //  function to find user by email
      public function findByUsername($username) {
     $query = "SELECT * FROM users WHERE username = :username LIMIT 1";
     $stmt = $this->db->prepare($query);
@@ -80,6 +80,51 @@ class User {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function countUsers() {
+        return $this->count('users');
+    }
+
+    public function findByEmail($email)
+    {
+        $query = "SELECT * FROM " . $this->table . " WHERE email = :email LIMIT 1";
+        
+        
+        $stmt = $this->pdo->prepare($query); 
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ? $user : null;
+    }
+
+    public function getAllUsers() {
+        return $this->select($this->table);
+    }
+
+    public function deleteUser($userId) {
+        return $this->delete($this->table, 'id', $userId);
+    }
+
+    public function updateRole($id, $role) {
+        return $this->update($this->table, ['role' => $role], 'id', $id);
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ?>

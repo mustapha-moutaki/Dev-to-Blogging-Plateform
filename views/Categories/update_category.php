@@ -1,30 +1,37 @@
 <?php
 require_once __DIR__ . '/../../includes/crud_functions.php';
 require_once '../../vendor/autoload.php';
-use App\config\database;
+use App\config\Database;
 use App\Models\Admin;
+use App\Models\Category;
+use App\Model;
 
+$pdo = Database::makeconnection();
+$categoryModel = new Category($pdo);
 
 if (isset($_GET['update_category'])) {
   $updateId = $_GET['update_category'];
 
-  //making a connection
+  // إنشاء اتصال بقاعدة البيانات
   $pdo = Database::makeconnection();
-  $admin = new Admin($pdo);
+  $categoryModel = new Category($pdo);
 
- //get data of the tag
-  $category = $admin->getCategoryById($updateId);
+  // جلب بيانات الفئة
+  $category = $categoryModel->getCategoryById($updateId);
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_category'])) {
-    $categoryName = $_POST['category'];
+  $categoryName = $_POST['category'];
 
-    if ($admin->updateCategory($updateId, $categoryName)) {
-        header('Location:list_categories.php');
-        exit();
-    } else {
-        echo "error of updating ";
-    }
+  if ($categoryModel->updateCategory($updateId, $categoryName)) {
+      header('Location: list_categories.php');
+      exit();
+  } else {
+      echo "Error updating the category.";
+  }
 }
+
+
 ?>
 
 
@@ -53,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_category'])) {
 <form class="w-full max-w-sm" method="POST">
   <div class="flex items-center border-b border-blue-500 py-2">
   <?php if ($category): ?>
-    <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="update category" aria-label="category" name="category" value="<?= $category['category']; ?>">
+    <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="update category" aria-label="category" name="category" value="<?= $category['name']; ?>">
     <button class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded" type="submit" name="update_category">
       update
     </button>

@@ -1,51 +1,35 @@
 <?php
-require_once __DIR__ . '/../../includes/crud_functions.php';
-require_once '../../vendor/autoload.php';
-use App\config\database;
-use App\Models\Admin;
+require_once __DIR__ . '/../../includes/crud_functions.php';  // Import necessary files
+require_once '../../vendor/autoload.php';  // Autoload necessary classes
+use App\Config\Database;  // Use the correct namespace for Database
+use App\Models\Tag;  // Import the Category model
 
-$pdo = Database::makeconnection();
+// Get the connection instance
+$pdo = Database::makeConnection();  // Ensure the connection is successful
 
 try {
-    $admin = new Admin($pdo);
+    // Create an instance of Category model
+    $TagModel = new Tag($pdo);
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
 }
 
+// Fetch all categories
+$getAllTags = $TagModel->getAllTags();
 
-//for deleting
+// If there's a delete request, process it
 if (isset($_GET['delete_id'])) {
     $deleteId = $_GET['delete_id'];
-    if ($admin->deleteTag($deleteId)) {
+    if ($TagModel->deleteTag($deleteId)) {
+        header('Location: list_tag.php');
+        exit();
     } else {
-        echo "Failed to delete the tag.";
-    }
-}
-
-//for editing
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_tag'])) {
-    $tagName = $_POST['tag_name'];
-    
-    if ($admin->updateTag($editId, $tagName)) {
-        echo "Tag updated successfully!";
-    } else {
-        echo "Failed to update the tag.";
+        echo "Failed to delete the Tag.";
     }
 }
 
 
-
-
-$getAllTags ="";
-$tag = "tags";
-if(database::makeconnection() === null){
-    echo"faild to instapleshed connection";
-}else{
-$getAllTags = Database::getAllTags($tag);
-}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">

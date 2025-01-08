@@ -4,10 +4,8 @@ use App\Config\Database;
 use App\Models\User;
 
 Database::makeconnection();
-
 // Start the session for CSRF token handling
 session_start();
-
 // Generate a CSRF token if it's not already set
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -21,10 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signup'])) {
         die("CSRF token validation failed!");
     }
 
-    // Collect and sanitize user input
     $username = htmlspecialchars(trim($_POST['username']));
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
-    $password = $_POST['password']; // Password will be hashed before storing
+    $password = $_POST['password'];
 
     try {
         // Instantiate the User class
@@ -41,10 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signup'])) {
             header('Location:../../admin/index.php');
             exit;
         } else {
-            echo "Error: User could not be registered."; // If the method doesn't return true, this will be shown
+            echo "Error: User could not be registered.";
         }
     } catch (\Exception $e) {
-        echo "Error: " . $e->getMessage(); // Display any exception thrown during registration
+        echo "Error: " . $e->getMessage();
     }
     
 }

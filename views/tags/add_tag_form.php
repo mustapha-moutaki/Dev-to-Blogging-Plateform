@@ -1,41 +1,27 @@
 <?php
-require_once __DIR__ . '/../../includes/crud_functions.php';
-require_once __DIR__ . '/../../classes/models/tag.php';
-require_once '../../vendor/autoload.php';
-// require_once __DIR__ . '/../../controllers/tagController.php';
-// require_once __DIR__ . '/../../config/Database.php';
-use App\config\database;
-// include '/../../config/database.php'; 
-
-use App\Modules\Tag;
-// use App\Config\Database;
-
-// $database = new Database();
-// $db = $database->connect();
+require_once __DIR__ . '/../../includes/crud_functions.php';  // Import necessary files
+require_once '../../vendor/autoload.php';  // Autoload necessary classes
+use App\Config\Database;
+use App\Models\Tag;  // Import the Category model
 
 
-
-// $tagModel = new Tag($db);
-
+$db = new Database();
+// Create an instance of the Category model
+$tagModel = new Tag();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addTag'])) {
     $tagName = htmlspecialchars(trim($_POST['tag']));
+
+    // Check if the category name is not empty
     if (!empty($tagName)) {
-       
-       if(database::makeconnection() === null){
-        echo"faild connection!";
-       }else {
-        $table = "tags";
-        $column = "name";
-        database::add($table,$column,$tagName);
-        header('Location:http://localhost/devblog_dashboard/admin/index.php');
+        // Call the createCategory method to insert the category into the database
+        $tagModel->createTag($tagName);
+
+        // Redirect to another page after successful insertion
+        header('Location: http://localhost/devblog_dashboard/admin/index.php');
         exit();
-       }
-    //     if ($tagModel->createTag($tagName)) {
-    //         $message = "Tag added successfully!";
-    //     } else {
-    //         $message = "Failed to add the tag.";
-    //     }
+    } else {
+        echo "tag name cannot be empty!";
     }
 }
 ?>
@@ -63,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addTag'])) {
 <form class="w-full max-w-sm" method="POST">
   <div class="flex items-center border-b border-blue-500 py-2">
     <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="add new Tag" aria-label="tag" name="tag">
-    <button class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded" type="sybmit" name="addTag">
+    <button class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded" type="submit" name="addTag">
       ADD A TAG
     </button>
     <button class="flex-shrink-0 border-transparent border-4 text-blue-500 hover:text-blue-800 text-sm py-1 px-2 rounded" type="button">

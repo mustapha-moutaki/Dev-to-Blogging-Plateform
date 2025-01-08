@@ -1,38 +1,4 @@
 <?php
-// require_once dirname(__DIR__) . '/config/database.php';
-// require_once dirname(__DIR__) . '/includes/crud_functions.php';
-
-// require_once '../vendor/autoload.php';//including autoload to use namw
-// use App\Modules\user;//declaration class user from spacename app\modules
-
-
-// $pdo = connect_db(); // Establish the PDO connection
-
-// $articles = get_all_articles($pdo); // Fetch all articles
-// $category_stats = get_category_stats($pdo); // Fetch category stats
-// $top_users = get_top_users($pdo); // Fetch top users
-// $top_articles = get_top_articles($pdo); // Fetch top articles
-
-
-// // Prepare data for the chart
-// $categories = [];
-// $counts = [];
-// // Define colors for the chart
-// $colors = [
-//     'rgb(78, 115, 223)',    // primary
-//     'rgb(28, 200, 138)',    // success
-//     'rgb(54, 185, 204)',    // info
-//     'rgb(246, 194, 62)',    // warning
-//     'rgb(231, 74, 59)',     // danger
-//     'rgb(133, 135, 150)',   // secondary
-//     'rgb(90, 92, 105)',     // dark
-//     'rgb(244, 246, 249)'    // light
-// ];
-
-// foreach ($category_stats as $stat) {
-//     $categories[] = $stat['category_name'];
-//     $counts[] = $stat['article_count'];
-// }
 
 session_start();
 
@@ -65,73 +31,48 @@ $colors = [
     'rgb(244, 246, 249)'    // light
 ];
 
-foreach ($categories_stats as $stat) {
-    $categories[] = $stat['category_name'];
-    $counts[] = $stat['article_count'];
-}
-
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Config\Database;
-use App\Config\User;
-use App\Config\Tag;
-$tagsCount ="";
-$tag = "tags";
-if(database::makeconnection() === null){
-    echo"faild to instapleshed connection";
-}else{
-$tagsCount = Database::getTableCount($tag);
-}
+use App\Models\User;
+use App\Models\Tag;
+use App\Models\Category;  // Use the Category model
+use App\Models\Article; // Use the Category model
+use App\Models\Author; // Use the Category model
 
+// Get the connection instance
+$pdo = Database::makeConnection();
 
-$categoryCount ="";
-$category = "categories";
-if(database::makeconnection() === null){
-    echo"faild to instapleshed connection";
-}else{
-$categoryCount = Database::getTableCount($category);
-}
+// Create an instance of the Category model
+$categoryModel = new Category($pdo);
+$tagModel = new Tag($pdo);
+$userModel = new user($pdo);
+$articleModel = new Article($pdo);
+$getAllArticles = new Article($pdo);
 
+// Get the counts of categories and tags
+$categoryCount = $categoryModel->countCategories();   
+$tagCount = $tagModel->countTags();  
+$userCount = $userModel->countUsers();  
+$articleCount = $articleModel->countArticles();   
+$allArticles = $getAllArticles->getAllArticles();
 
+$articleModel = new Article($pdo);
+$mostViewedArticles = $articleModel->getMostViewedArticles();
 
-$userCount ="";
-$user = "users";
-if(database::makeconnection() === null){
-    echo"faild to instapleshed connection";
-}else{
-$userCount = Database::getTableCount($user);
-}
-
-$articleCount ="";
-$article = "articles";
-if(database::makeconnection() === null){
-    echo"faild to instapleshed connection";
-}else{
-$articleCount = Database::getTableCount($article);
-}
+$authorModel = new Author($pdo);
+$top3Authors = $authorModel->getTop3AuthorsByViews();
 
 
 
-$allArticles = "";
-if(database::makeconnection() === null){
-    echo"faild to instapleshed connection";
-}else{
-$allArticles = Database::get_all_articles();
-}
 
-$topUsers = "";
-if(database::makeconnection() === null){
-    echo"faild to instapleshed connection";
-}else{
-$topUsers = Database::get_top_users();
-}
 
 $categories_stats = "";
 if(database::makeconnection() === null){
     echo"faild to instapleshed connection";
 }else{
-$categories_stats = Database::get_category_stats();
+    $categories_stats = Category::get_category_stats(); 
 }
-// print_r($categories_stats);
+
 
 
 ?>
@@ -230,7 +171,7 @@ $categories_stats = Database::get_category_stats();
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tags
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $tagsCount; ?></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $tagCount; ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-tags fa-2x text-gray-300"></i>
@@ -282,7 +223,7 @@ $categories_stats = Database::get_category_stats();
             </div>
         </div>
         <div class="card-body">
-            <?php foreach($topUsers as $author): ?>
+            <?php foreach($top3Authors as $author): ?>
                 <div class="d-flex align-items-center mb-3">
                     <div class="mr-3">
                         <div class="icon-circle bg-primary text-white">
@@ -290,7 +231,7 @@ $categories_stats = Database::get_category_stats();
                                 <img src="<?= htmlspecialchars($author['profile_picture_url']) ?>" 
                                      class="rounded-circle" 
                                      style="width: 40px; height: 40px; object-fit: cover;"
-                                     alt="<?= htmlspecialchars($author['username']) ?>">
+                                     alt="<?= htmlspecialchars($author['name']) ?>">
                             <?php else: ?>
                                 <i class="fas fa-user"></i>
                             <?php endif; ?>
@@ -298,7 +239,7 @@ $categories_stats = Database::get_category_stats();
                     </div>
                     <div class="flex-grow-1">
                         <div class="small text-gray-500">Author #<!--?= $index + 1 ?--></div>
-                        <div class="font-weight-bold"><?= htmlspecialchars($author['username']) ?></div>
+                        <div class="font-weight-bold"><?= htmlspecialchars($author['name']) ?></div>
                         <div class="text-gray-800">
                             <?= number_format($author['article_count']) ?> articles
                             <span class="mx-1">•</span>
@@ -306,7 +247,7 @@ $categories_stats = Database::get_category_stats();
                         </div>
                     </div>
                     <div class="ml-2">
-                        <a href="./entities/users/user-profile.php?id=<?= $author['id'] ?>"
+                        <a href="./entities/users/user-profile.php?id=<?= $author['author_id'] ?>"
                            class="btn btn-primary btn-sm">
                             View Profile
                         </a>
@@ -336,7 +277,7 @@ $categories_stats = Database::get_category_stats();
             </div>
         </div>
         <div class="card-body">
-            <?php foreach($allArticles as $article): ?>
+            <?php foreach($mostViewedArticles as $article): ?>
                 <div class="d-flex align-items-center mb-3">
                     <div class="mr-3">
                         <div class="icon-circle bg-success text-white">
@@ -346,7 +287,7 @@ $categories_stats = Database::get_category_stats();
                     <div class="flex-grow-1">
                         <div class="small text-gray-500">
                             Published <?= date('M d, Y', strtotime($article['created_at'])) ?>
-                            by <?= htmlspecialchars($article['author_name']) ?>
+                            by <?= htmlspecialchars($article['title']) ?>
                         </div>
                         <div class="font-weight-bold"><?= htmlspecialchars($article['title']) ?></div>
                         <div class="text-gray-800">
@@ -368,49 +309,6 @@ $categories_stats = Database::get_category_stats();
         </div>
     </div>
 </div>
-
-
-                        <!-- Pie Chart -->
-                        <!-- <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-Card Header - Dropdown -->
-                                <!--div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Category Distribution</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Category Actions:</div>
-                                            <a class="dropdown-item" href="devblog_dashboard\views\Categories\list_categories.php">Manage Categories</a>
-                                            <a class="dropdown-item" href="http://localhost/devblog_dashboard/views/categories/list_category.php">Add Category</a>
-                                        </div>
-                                    </div>
-                                </!--div>
-                                <!- Card Body -->
-                                <!--div class="card-body">
-                                    <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="categoryPieChart"></canvas>
-                                    </div>
-                                    <div class="mt-4 text-center small">
-                                        <!?php foreach ($category_stats as $index => $stat): ?>
-                                            <span class="mr-2">
-                                                <i class="fas fa-circle" style="color: <!-?= $colors[$index % count($colors)] ?>"></i>
-                                                <!?= htmlspecialchars($stat['category_name']) ?>
-                                                (<!?= $stat['article_count'] ?>)
-                                            </span>
-                                        <!?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-
-
-
 
 
 
@@ -439,16 +337,16 @@ $categories_stats = Database::get_category_stats();
                 <canvas id="categoryPieChart"></canvas>
             </div>
             <div class="mt-4 text-center small">
-                <?php if (isset($categories_stats) && is_array($categories_stats)): ?>
-                    <?php foreach ($categories_stats as $index => $stat): ?>
+                <!--?php if (isset($categories_stats) && is_array($categories_stats)): ?-->
+                    <?php foreach ($categories_stats as $index => $stat):?>
                         <span class="mr-2">
                             <i class="fas fa-circle" style="color: <?= $colors[$index % count($colors)] ?>"></i>
                             <?= htmlspecialchars($stat['category_name']) ?> (<?= $stat['article_count'] ?>)
                         </span>
                     <?php endforeach; ?>
-                <?php else: ?>
-                    <p class="text-muted">No data available</p>
-                <?php endif; ?>
+                <!--?php else: ?-->
+                    <!--p class="text-muted">No data available</!--p-->
+                <!--?php endif; ?-->
             </div>
         </div>
     </div>
@@ -470,7 +368,7 @@ $categories_stats = Database::get_category_stats();
                                             <th>Tags</th>
                                             <th>Views</th>
                                             <th>Created At</th>
-                                            <!-- <th>Actions</th> -->
+                                            <th>status</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -481,7 +379,7 @@ $categories_stats = Database::get_category_stats();
                                             <th>Tags</th>
                                             <th>Views</th>
                                             <th>Created At</th>
-                                            <!-- <th>Actions</th> -->
+                                            <th>status</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -490,8 +388,8 @@ $categories_stats = Database::get_category_stats();
                                             <td>                                           
                                                 <?= htmlspecialchars($article['title']) ?>
                                             </td>
-                                            <td><?= htmlspecialchars($article['author_name']) ?></td>
-                                            <td><?= htmlspecialchars($article['category_name']) ?></td>
+                                            <td><?= htmlspecialchars($article['author_name']|| 'null') ?></td>
+                                            <td><?= htmlspecialchars($article['category_name'] || 'null') ?></td>
                                             <td>
                                                 <?php
                                                 if ($article['tags']) {
@@ -508,23 +406,13 @@ $categories_stats = Database::get_category_stats();
                                             <td data-order="<?= strtotime($article['created_at']) ?>">
                                                 <?= date('M d, Y H:i', strtotime($article['created_at'])) ?>
                                             </td>
-                                            <!-- <td> -->
-                                                <!-- <div class="btn-group">
-                                                    <a href="view-article.php?id=<?= $article['id'] ?>" 
-                                                    class="btn btn-info btn-sm">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="edit-article.php?id=<?= $article['id'] ?>" 
-                                                    class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <button type="button" 
-                                                            class="btn btn-danger btn-sm delete-article" 
-                                                            data-id="<?= $article['id'] ?>">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div> -->
-                                            <!-- </td> -->
+
+                                            <!-- <td>
+                                            <select name="status" id="" name="status">
+                                            <option value="published" <?= $article['status'] == 'published' ? 'selected' : '' ?>>published</option>
+                                            </select>
+                                     
+                                            </td> -->
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>
@@ -534,6 +422,9 @@ $categories_stats = Database::get_category_stats();
                     </div>
 
                 </div>
+
+
+                
                 <!-- /.container-fluid -->
 
             </div>
@@ -563,10 +454,10 @@ $categories_stats = Database::get_category_stats();
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">Are tou sure you want to logout?.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
+                    <a class="btn btn-primary" href="http://localhost/devblog_dashboard/views/login/logout.php" name ="logout">Logout</a>
                 </div>
             </div>
         </div>
