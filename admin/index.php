@@ -409,7 +409,7 @@ if(database::makeconnection() === null){
 
                                             <!-- <td>
                                             <select name="status" id="" name="status">
-                                            <option value="published" <?= $article['status'] == 'published' ? 'selected' : '' ?>>published</option>
+                                            <option value="published" <!-?= $article['status'] == 'published' ? 'selected' : '' ?>>published</option>
                                             </select>
                                      
                                             </td> -->
