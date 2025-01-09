@@ -10,25 +10,6 @@ class Article extends Model {
     }
 
     public function getAllArticles() {
-        // $query = "
-        //      SELECT 
-        //     articles.id, 
-        //     articles.title, 
-        //     articles.content, 
-        //     users.username AS author_name, 
-        //     categories.name AS category_name, 
-        //     articles.created_at 
-        // FROM 
-        //     articles 
-        // JOIN users ON articles.author_id = users.id 
-        // JOIN categories ON articles.category_id = categories.id
-        // ";
-        // $stmt = $this->db->prepare($query);
-        // $stmt->execute();
-        // return $stmt->fetchAll(PDO::FETCH_ASSOC); 
-
-
-
         $query = "
         SELECT 
        articles.id, 

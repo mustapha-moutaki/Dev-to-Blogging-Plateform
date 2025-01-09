@@ -314,9 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                         </a>
                     </div>
                 </div>
-                <!--?php if($article < count($allArticles) - 1): ?-->
                     <hr>
-                <!--?php endif; ?-->
             <?php endforeach; ?>
         </div>
     </div>
@@ -356,9 +354,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                             <?= htmlspecialchars($stat['category_name']) ?> (<?= $stat['article_count'] ?>)
                         </span>
                     <?php endforeach; ?>
+
+
+
                 <!--?php else: ?-->
                     <!--p class="text-muted">No data available</!--p-->
                 <!--?php endif; ?-->
+
+                
             </div>
         </div>
     </div>

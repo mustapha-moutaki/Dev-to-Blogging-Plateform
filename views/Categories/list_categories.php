@@ -79,7 +79,7 @@ if (isset($_GET['delete_id'])) {
                             <span class="rounded-md bg-blue-500 text-white px-10 py-1">
                             <a href="http://localhost/devblog_dashboard/views/categories/update_category.php?update_category=<?php echo $category['id']; ?>">edit</a>
                             </span>
-                            <span class="rounded-md bg-blue-500 text-white px-10 py-1">
+                            <span class="rounded-md bg-red-500 text-white px-10 py-1">
                             <a href="http://localhost/devblog_dashboard/views/categories/list_categories.php?delete_id=<?php echo $category['id']; ?>" onclick="return confirm('Are you sure you want to delete this category?')">Delete</a>
                             </span>
                             

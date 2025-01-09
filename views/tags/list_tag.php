@@ -79,7 +79,7 @@ if (isset($_GET['delete_id'])) {
                             <span class="rounded-md bg-blue-500 text-white px-10 py-1">
                             <a href="update_tag.php?update_tag=<?= $tag['id']; ?>">Edit</a>
                             </span>
-                            <span class="rounded-md bg-blue-500 text-white px-10 py-1"><a href="http://localhost/devblog_dashboard/views/tags/list_tag.php?delete_id=<?php echo $tag['id']; ?>" onclick="return confirm('Are you sure you want to delete this tag?')">Delete</a>
+                            <span class="rounded-md bg-red-500 text-white px-10 py-1"><a href="http://localhost/devblog_dashboard/views/tags/list_tag.php?delete_id=<?php echo $tag['id']; ?>" onclick="return confirm('Are you sure you want to delete this tag?')">Delete</a>
 
                               
                             </span>

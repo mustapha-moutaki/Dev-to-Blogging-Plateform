@@ -36,16 +36,8 @@ class Author extends User {
         $stmt->bindParam(2, $_SESSION['user_id'], PDO::PARAM_INT);
         return $stmt->execute();
     }
-// methidee to add an article
-    // public function addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status) {
-    //     $sql = "INSERT INTO articles (title, slug, content, excerpt, meta_description, category_id, featured_image, status) 
-    //             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    //     $stmt = $this->pdo->prepare($sql);
-    //     $stmt->execute([$title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status]);
-    //     return $this->pdo->lastInsertId();
-    // }
+
     public function addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status) {
-        // Start the session to access the logged-in user's session data
         session_start();
     
        
@@ -62,7 +54,6 @@ class Author extends User {
     
         $stmt->execute([$title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status, $authorId]);
     
-        //return the last id of the user
         return $this->pdo->lastInsertId();
     }
     

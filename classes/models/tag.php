@@ -6,11 +6,6 @@ use PDO;
     class Tag extends Model {
         protected $table = 'tags';
         
-        // protected $pdo;
-
-        // public function __construct($pdo) {
-        //     $this->pdo = $pdo;
-        // }
 
         public function createTag($name) {
             return $this->create($this->table, ['name' => $name]);
