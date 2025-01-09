@@ -1,6 +1,4 @@
 <?php
-// require_once '../vendor/autoload.php';
-
 use App\Config\Database;
 use App\Models\User;
 
@@ -55,7 +53,10 @@ if (isset($_SESSION['user_id']) ?? 'User') {
                 <div id="collapseArticles" class="collapse" aria-labelledby="headingArticles" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Article Management:</h6>
-                        <a class="collapse-item" href="http://localhost/devblog_dashboard/views/home%20page/home.php">View All Articles</a>
+                        <a class="collapse-item" href="http://localhost/devblog_dashboard/views/home%20page/home.php">View All Articles</a> 
+                        <?php if($user['role'] =='admin'): ?>
+                        <a class="collapse-item" href="http://localhost/devblog_dashboard/views/articles/display_article.php">Manage All Articles</a>
+                        <?php endif; ?>
                         <a class="collapse-item" href="http://localhost/devblog_dashboard/views/articles/add_article_form.php">Add New Article</a>
                         <a class="collapse-item" href="article-drafts.php">Drafts</a>
                     </div>

@@ -1,3 +1,8 @@
+<?php
+use App\Config\Database;
+use App\Models\User;
+
+?>
 <!-- Topbar -->
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
