@@ -239,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                 <div class="d-flex align-items-center mb-3">
                     <div class="mr-3">
                         <div class="icon-circle bg-primary text-white">
-                            <?php if($author['profile_picture_url']): ?>
+                            <?php if($author['profile_picture_url'] ?? ''): ?>
                                 <img src="<?= htmlspecialchars($author['profile_picture_url']) ?>" 
                                      class="rounded-circle" 
                                      style="width: 40px; height: 40px; object-fit: cover;"
@@ -255,7 +255,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                         <div class="text-gray-800">
                             <?= number_format($author['article_count']) ?> articles
                             <span class="mx-1">•</span>
-                            <?= number_format((int)$author['total_views']) ?> total views
                         </div>
                     </div>
                     <div class="ml-2">
@@ -308,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                         </div>
                     </div>
                     <div class="ml-2">
-                        <a href="./entities/articles/view-article.php?id=<?= $article['id'] ?>"
+                        <a href="http://localhost/devblog_dashboard/views/home%20page/home.php?id=<?= $article['id'] ?>"
                            class="btn btn-success btn-sm">
                             Read Article
                         </a>
@@ -366,7 +365,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         </div>
     </div>
 </div>
-
                     <!-- DataTales Example -->
                      <?php if($user['role'] === 'admin'):?>
                     <div class="card shadow mb-4">

@@ -1,7 +1,6 @@
 <?php 
 include __DIR__.'/../config/database.php';
 
-
 function connect_db() {
     try {
         // Create a DSN string
@@ -41,7 +40,7 @@ function get_all_articles($pdo) {
 // new modification
 function get_All_tags($pdo){
     $query = "SELECT tags.id , tags.name
-    FROM tags 
+    FROM tags
     ";
     $stmt = $pdo -> prepare($query);
     $stmt ->execute();
