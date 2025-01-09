@@ -84,6 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 }
 
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['read_article'])) {
+
+    $result = $articleModel->incrementViews($articleId, $pdo);
+    echo $result;
+}
 
 
 ?>
@@ -308,9 +313,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                     </div>
                     <div class="ml-2">
                         <a href="http://localhost/devblog_dashboard/views/home%20page/home.php?id=<?= $article['id'] ?>"
-                           class="btn btn-success btn-sm">
+                           class="btn btn-success btn-sm" name="read_article">
                             Read Article
                         </a>
+                        <input type="hidden" name="article_id" value="<?= $article['id'] ?>">
                     </div>
                 </div>
                     <hr>

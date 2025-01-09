@@ -62,5 +62,51 @@ class Article extends Model {
     public function deleteArticle($articleId) {
         return $this->delete($this->table, 'id', $articleId);
     }
+
+    function incrementViews($articleId, $pdo) {
+        try {
+            $stmt = $pdo->prepare("UPDATE articles SET views = views + 1 WHERE id = :articleId");
+            $stmt->bindParam(':articleId', $articleId, PDO::PARAM_INT);
+    
+            if ($stmt->execute()) {
+                return "Views count updated successfully.";
+            } else {
+                return "Failed to update views count.";
+            }
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
+
+
+    function create_slug($string) {
+        // Replace non letter or digits by -
+        $string = preg_replace('~[^\pL\d]+~u', '-', $string);
+                                                               
+        // Transliterate                                          
+        if (function_exists('iconv')) {                                 
+            $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);            
+        }
+    
+        // Remove unwanted characters
+        $string = preg_replace('~[^-\w]+~', '', $string);
+    
+        // Trim
+        $string = trim($string, '-');
+    
+        // Remove duplicate -
+        $string = preg_replace('~-+~', '-', $string);
+    
+        // Lowercase
+        $string = strtolower($string);
+    
+        // If string is empty, return 'n-a'
+        if (empty($string)) {
+            return 'n-a';
+        }
+    
+        return $string;
+    }
+    
     
 }
