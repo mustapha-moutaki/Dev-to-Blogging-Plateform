@@ -54,7 +54,8 @@ if (isset($_SESSION['user_id']) ?? 'User') {
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Article Management:</h6>
                         <a class="collapse-item" href="http://localhost/devblog_dashboard/views/home%20page/home.php">View All Articles</a> 
-                        <?php if($user['role'] =='admin'): ?>
+                        <!--?php if($user['role'] =='admin'): ?-->
+                        <?php if (isset($user['role']) && $user['role'] == 'admin'): ?>
                         <a class="collapse-item" href="http://localhost/devblog_dashboard/views/articles/display_article.php">Manage All Articles</a>
                         <?php endif; ?>
                         <a class="collapse-item" href="http://localhost/devblog_dashboard/views/articles/add_article_form.php">Add New Article</a>
@@ -64,7 +65,8 @@ if (isset($_SESSION['user_id']) ?? 'User') {
             </li>
 
             <!-- Nav Item - Categories -->
-<?php if($user['role']==='admin'): ?>
+<!--?php if($user['role']==='admin'): ?-->
+    <?php if (isset($user['role']) && $user['role'] == 'admin'): ?>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategories"
                     aria-expanded="true" aria-controls="collapseCategories">
@@ -81,7 +83,8 @@ if (isset($_SESSION['user_id']) ?? 'User') {
             </li>
             <?php endif; ?>
             <!-- Nav Item - Tags -->
-            <?php if($user['role']==='admin'): ?>
+            <!--?php if($user['role']==='admin'): ?-->
+                <?php if (isset($user['role']) && $user['role'] == 'admin'): ?>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTags"
                     aria-expanded="true" aria-controls="collapseTags">
@@ -101,13 +104,15 @@ if (isset($_SESSION['user_id']) ?? 'User') {
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <?php if($user['role']==='admin'): ?>
+            <!--?php if($user['role']==='admin'): ?-->
+                <?php if (isset($user['role']) && $user['role'] == 'admin'): ?>
             <div class="sidebar-heading">
                 User Management
             </div>
             <?php endif; ?>
             <!-- Nav Item - Authors -->
-            <?php if($user['role']==='admin'): ?>
+            <!--?php if($user['role']==='admin'): ?-->
+                <?php if (isset($user['role']) && $user['role'] == 'admin'): ?>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAuthors"
                     aria-expanded="true" aria-controls="collapseAuthors">

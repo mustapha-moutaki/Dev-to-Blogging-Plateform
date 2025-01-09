@@ -62,7 +62,9 @@ if (isset($_SESSION['user_id'])) {
             <?php if (empty($allArticles)): ?>
                 <p class="text-center text-gray-500">No articles found</p>
             <?php else: ?>
+           
                 <?php foreach ($allArticles as $article): ?>
+                     <?php if ($article['status']=='published'): ?>
                     <div class="py-8 flex flex-wrap md:flex-nowrap">
                         <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
                             <span class="font-semibold title-font text-gray-700"><?= htmlspecialchars($article['category_name']) ?></span>
@@ -80,8 +82,10 @@ if (isset($_SESSION['user_id'])) {
                             </a>
                         </div>
                     </div>
+                     <?php endif; ?>
                 <?php endforeach; ?>
             <?php endif; ?>
+           
         </div>
     </div>
 </section>
