@@ -122,38 +122,15 @@ if (isset($_SESSION['user_id']) ?? 'User') {
                 </div>
             </li>
             <?php endif; ?>
-            <!-- Nav Item - Comments -->
-            <li class="nav-item">
-                <a class="nav-link" href="comments.php">
-                    <i class="fas fa-fw fa-comments"></i>
-                    <span>Comments</span>
-                </a>
-            </li>
+         
 
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Settings
-            </div>
+           
 
-            <!-- Nav Item - Blog Settings -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings"
-                    aria-expanded="true" aria-controls="collapseSettings">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Blog Settings</span>
-                </a>
-                <div id="collapseSettings" class="collapse" aria-labelledby="headingSettings" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Configuration:</h6>
-                        <a class="collapse-item" href="general-settings.php">General Settings</a>
-                        <a class="collapse-item" href="appearance.php">Appearance</a>
-                        <a class="collapse-item" href="seo-settings.php">SEO Settings</a>
-                    </div>
-                </div>
-            </li>
+           
 
             <!-- Nav Item - Your Profile -->
             <li class="nav-item">
