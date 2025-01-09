@@ -12,11 +12,6 @@ $username = $_SESSION['username'];
 
 $categories_stats = []; // Initialize the variable to prevent warnings
 
-
-// Debugging: Print the data to confirm structure
-// Uncomment this line to debug
-// print_r($categories_stats);
-
 // Prepare data for the chart
 $categories = [];
 $counts = [];
@@ -63,15 +58,31 @@ $authorModel = new Author($pdo);
 $top3Authors = $authorModel->getTop3AuthorsByViews();
 
 
-
-
-
 $categories_stats = "";
 if(database::makeconnection() === null){
     echo"faild to instapleshed connection";
 }else{
     $categories_stats = Category::get_category_stats(); 
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+    $updateId = $_POST['article_id'];
+    $statusName = $_POST['status'];  
+
+    
+    if (!empty($updateId) && !empty($statusName)) {
+        if (!$articleModel->updateStatus($updateId, $statusName)) {
+            echo "Failed to update article status.";
+            
+        }
+    } else {
+        echo "Please try again.";
+    }
+    header('location: http://localhost/devblog_dashboard/admin/index.php');
+    exit;
+}
+
 
 
 
@@ -88,6 +99,7 @@ if(database::makeconnection() === null){
     <meta name="author" content="">
 
     <title>DevBlog - Dashboard</title>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -353,6 +365,7 @@ if(database::makeconnection() === null){
 </div>
 
                     <!-- DataTales Example -->
+                     <?php if($user['role'] === 'admin'):?>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Recent Articles</h6>
@@ -407,12 +420,23 @@ if(database::makeconnection() === null){
                                                 <?= date('M d, Y H:i', strtotime($article['created_at'])) ?>
                                             </td>
 
-                                            <!-- <td>
-                                            <select name="status" id="" name="status">
-                                            <option value="published" <!-?= $article['status'] == 'published' ? 'selected' : '' ?>>published</option>
-                                            </select>
-                                     
-                                            </td> -->
+                                            <td>
+                                           
+
+                                                  <form method="POST" action="index.php">
+                                                    <input type="hidden" name="article_id" value="<?= $article['id']; ?>">
+                                                    <select name="status" style="border: none; padding: 5px; background-color: #f9f9f9; border-radius: 4px;">
+                                                        <option value="published" <?= $article['status'] == 'published' ? 'selected' : '' ?>>Published</option>
+                                                        <option value="draft" <?= $article['status'] == 'draft' ? 'selected' : '' ?>>Draft</option>
+                                                        <option value="scheduled" <?= $article['status'] == 'scheduled' ? 'selected' : '' ?>>Scheduled</option>
+                                                    </select>
+                                                    <button type="submit" name="update_status" style="background-color: #007BFF; color: white; padding: 10px 40px; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px;">
+                                                    Save
+                                                </button>
+                                            </form>
+
+
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>
@@ -420,7 +444,7 @@ if(database::makeconnection() === null){
                             </div>
                         </div>
                     </div>
-
+                    <?php endif; ?>
                 </div>
 
 

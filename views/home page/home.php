@@ -5,6 +5,7 @@ use App\Config\Database;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Models\User;
 
 // Establish Database Connection
 $pdo = Database::makeconnection();
@@ -13,6 +14,17 @@ if (!$pdo) {
 }
 $articleModel = new Article($pdo);
 $allArticles = $articleModel->getAllArticles();
+
+
+
+if (isset($_SESSION['user_id'])) {
+    $db = Database::makeConnection(); 
+    $userModel = new User($db);
+
+    $userId = $_SESSION['user_id'];  
+
+    $user = $userModel->getUserById($userId);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,6 +39,7 @@ $allArticles = $articleModel->getAllArticles();
 </head>
 <body>
 
+  
 <header class="fixed inset-x-0 top-0 z-30 mx-auto w-full max-w-screen-md border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-lg md:top-6 md:rounded-3xl lg:max-w-screen-lg">
     <div class="px-4">
         <div class="flex items-center justify-between">
@@ -42,32 +55,33 @@ $allArticles = $articleModel->getAllArticles();
     </div>
 </header>
 
+
 <section class="text-gray-600 body-font overflow-hidden">
     <div class="container px-5 py-24 mx-auto">
         <div class="-my-8 divide-y-2 divide-gray-100">
-        <?php if (empty($allArticles)): ?>
-    <p class="text-center text-gray-500">No articles found</p>
-<?php else: ?>
-    <?php foreach ($allArticles as $article): ?>
-        <div class="py-8 flex flex-wrap md:flex-nowrap">
-            <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-                <span class="font-semibold title-font text-gray-700"><?= htmlspecialchars($article['category_name']) ?></span>
-                <span class="mt-1 text-gray-500 text-sm"><?= htmlspecialchars($article['created_at']) ?></span>
-            </div>
-            <div class="md:flex-grow">
-                <h2 class="text-2xl font-medium text-gray-900 title-font mb-2"><?= htmlspecialchars($article['title']) ?></h2>
-                <p class="leading-relaxed"><?= htmlspecialchars($article['content']) ?></p>
-                <a href="/article.php?id=<?= htmlspecialchars($article['id']) ?>" class="text-indigo-500 inline-flex items-center mt-4">
-                    Learn More
-                    <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14"></path>
-                        <path d="M12 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    <?php endforeach; ?>
-<?php endif; ?>
+            <?php if (empty($allArticles)): ?>
+                <p class="text-center text-gray-500">No articles found</p>
+            <?php else: ?>
+                <?php foreach ($allArticles as $article): ?>
+                    <div class="py-8 flex flex-wrap md:flex-nowrap">
+                        <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
+                            <span class="font-semibold title-font text-gray-700"><?= htmlspecialchars($article['category_name']) ?></span>
+                            <span class="mt-1 text-gray-500 text-sm"><?= htmlspecialchars($article['created_at']) ?></span>
+                        </div>
+                        <div class="md:flex-grow">
+                            <h2 class="text-2xl font-medium text-gray-900 title-font mb-2"><?= htmlspecialchars($article['title']) ?></h2>
+                            <p class="leading-relaxed"><?= htmlspecialchars($article['content']) ?></p>
+                            <a href="/article.php?id=<?= htmlspecialchars($article['id']) ?>" class="text-indigo-500 inline-flex items-center mt-4">
+                                Learn More
+                                <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 12h14"></path>
+                                    <path d="M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </section>

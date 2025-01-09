@@ -110,6 +110,7 @@ class User extends Model{
         return $this->update($this->table, ['role' => $role], 'id', $id);
     }
 
+    
 
 }
 

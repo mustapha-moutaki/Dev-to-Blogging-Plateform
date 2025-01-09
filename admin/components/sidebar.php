@@ -5,7 +5,7 @@ use App\Config\Database;
 use App\Models\User;
 
 // Check if the user is logged in
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user_id']) ?? 'User') {
     $db = Database::makeConnection(); 
     $userModel = new User($db);
 
@@ -55,7 +55,7 @@ if (isset($_SESSION['user_id'])) {
                 <div id="collapseArticles" class="collapse" aria-labelledby="headingArticles" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Article Management:</h6>
-                        <a class="collapse-item" href="articles.php">View All Articles</a>
+                        <a class="collapse-item" href="http://localhost/devblog_dashboard/views/home%20page/home.php">View All Articles</a>
                         <a class="collapse-item" href="http://localhost/devblog_dashboard/views/articles/add_article_form.php">Add New Article</a>
                         <a class="collapse-item" href="article-drafts.php">Drafts</a>
                     </div>
@@ -106,6 +106,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <?php endif; ?>
             <!-- Nav Item - Authors -->
+            <?php if($user['role']==='admin'): ?>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAuthors"
                     aria-expanded="true" aria-controls="collapseAuthors">
@@ -120,7 +121,7 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </li>
-
+            <?php endif; ?>
             <!-- Nav Item - Comments -->
             <li class="nav-item">
                 <a class="nav-link" href="comments.php">

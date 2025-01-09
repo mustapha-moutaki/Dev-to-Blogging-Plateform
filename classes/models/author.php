@@ -9,14 +9,14 @@ class Author extends User {
         $this->pdo = $pdo;
     }
 
-    // Method to create an article
-    public function createArticle($title, $content) {
-        $stmt = $this->pdo->prepare("INSERT INTO articles (title, content, author_id, status) VALUES (?, ?, ?, 'pending')");
-        $stmt->bindParam(1, $title);
-        $stmt->bindParam(2, $content);
-        $stmt->bindParam(3, $_SESSION['user_id']);
-        return $stmt->execute();
-    }
+    // // Method to create an article
+    // public function createArticle($title, $content) {
+    //     $stmt = $this->pdo->prepare("INSERT INTO articles (title, content, author_id, status) VALUES (?, ?, ?, 'pending')");
+    //     $stmt->bindParam(1, $title);
+    //     $stmt->bindParam(2, $content);
+    //     $stmt->bindParam(3, $_SESSION['user_id']);
+    //     return $stmt->execute();
+    // }
    
 
     // Method to update an article
@@ -37,13 +37,35 @@ class Author extends User {
         return $stmt->execute();
     }
 // methidee to add an article
+    // public function addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status) {
+    //     $sql = "INSERT INTO articles (title, slug, content, excerpt, meta_description, category_id, featured_image, status) 
+    //             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    //     $stmt = $this->pdo->prepare($sql);
+    //     $stmt->execute([$title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status]);
+    //     return $this->pdo->lastInsertId();
+    // }
     public function addArticle($title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status) {
-        $sql = "INSERT INTO articles (title, slug, content, excerpt, meta_description, category_id, featured_image, status) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // Start the session to access the logged-in user's session data
+        session_start();
+    
+       
+        if (!isset($_SESSION['user_id'])) {
+            throw new Exception("User must be logged in to create an article.");
+        }
+    
+        $authorId = $_SESSION['user_id'];
+    
+        
+        $sql = "INSERT INTO articles (title, slug, content, excerpt, meta_description, category_id, featured_image, status, author_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status]);
+    
+        $stmt->execute([$title, $slug, $content, $excerpt, $meta_description, $category_id, $featured_image, $status, $authorId]);
+    
+        //return the last id of the user
         return $this->pdo->lastInsertId();
     }
+    
     //methide to add tags to the article
     public function addArticleTag($article_id, $tag_id) {
         $sql = "INSERT INTO article_tag (article_id, tag_id) VALUES (?, ?)";
@@ -54,10 +76,10 @@ class Author extends User {
 
 
     public function getTop3AuthorsByViews($limit = 3) {
-        $sql = "SELECT authors.author_id, authors.name, COUNT(articles.id) AS article_count
+        $sql = "SELECT authors.id AS author_id, authors.name, COUNT(articles.id) AS article_count
                 FROM authors
-                LEFT JOIN articles ON authors.author_id = articles.author_id
-                GROUP BY authors.author_id
+                LEFT JOIN articles ON authors.id = articles.author_id
+                GROUP BY authors.id
                 ORDER BY article_count DESC
                 LIMIT :limit";
         $stmt = $this->pdo->prepare($sql);
@@ -65,6 +87,7 @@ class Author extends User {
         $stmt->execute(); 
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
+    
    
 }
 

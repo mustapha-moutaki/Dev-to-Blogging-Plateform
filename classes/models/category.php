@@ -34,17 +34,15 @@ use PDO;
         }
 
         public static function get_category_stats() {
-            // استعلام لجلب إحصائيات الفئات (اسم الفئة وعدد المقالات)
+           
             $sql = "SELECT categories.name AS category_name, COUNT(articles.id) AS article_count
                     FROM categories
                     LEFT JOIN articles ON categories.id = articles.category_id
                     GROUP BY categories.name";
-            
-            // تحضير وتنفيذ الاستعلام
+         
             $stmt = Database::makeconnection()->prepare($sql);
             $stmt->execute();
     
-            // إرجاع النتائج كـ array
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
