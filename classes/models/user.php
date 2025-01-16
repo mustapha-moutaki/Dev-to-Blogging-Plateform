@@ -53,7 +53,6 @@ class User extends Model{
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-    // Method to validate the user login credentials
     public function login($email, $password) {
         // Validate the input data
         if (empty($email) || empty($password)) {
@@ -85,11 +84,8 @@ class User extends Model{
         return $this->count('users');
     }
 
-    public function findByEmail($email)
-    {
+    public function findByEmail($email){
         $query = "SELECT * FROM " . $this->table . " WHERE email = :email LIMIT 1";
-        
-        
         $stmt = $this->pdo->prepare($query); 
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();

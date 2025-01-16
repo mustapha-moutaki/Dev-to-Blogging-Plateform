@@ -12,7 +12,8 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     bio TEXT,
-    profile_picture_url VARCHAR(255)
+    profile_picture_url VARCHAR(255),
+    role enum('')
 )
 
 CREATE TABLE authors (
